@@ -3,7 +3,9 @@ import config from "../../config/default";
 import { useHistory, Link } from "react-router-dom";
 import { useMessage } from "../../hooks/message.hook";
 import { AuthContext } from "../../context/AuthContext";
+import ReactMarkdown from "react-markdown/with-html";
 import styles from "./style.module.scss";
+import { compareSync } from "bcryptjs";
 
 export const Posts = () => {
   const history = useHistory();
@@ -63,6 +65,18 @@ export const Posts = () => {
     }
   };
 
+  const avg = (grades) => {
+    const array = JSON.parse(grades);
+    if (array.length == 0) {
+      return "Оцените этот пост первым!";
+    }
+
+    const summ = array.reduce((acc, element) => {
+      return acc + element;
+    });
+    return Math.round((summ * 10) / array.length) / 10;
+  };
+
   return (
     <section>
       <div className="row">
@@ -116,17 +130,17 @@ export const Posts = () => {
                       <div className="chip">История</div>
                     </div>
                     <div>
-                      Рейтинг: {rating}{" "}
                       <Link to={"/posts/" + id + "#rating"}>Отзывы</Link>
                     </div>
-                    <div>Ср рейт: {grades}</div>
+                    <div>Ср рейт: {avg(grades)}</div>
 
                     <div className="card-reveal">
                       <span className="card-title grey-text text-darken-4">
                         Краткое описание главы
                         <i className="material-icons right">close</i>
                       </span>
-                      <p>{preview}</p>
+
+                      <ReactMarkdown source={preview} escapeHtml={false} />
                     </div>
 
                     <div>Дата: {date}</div>

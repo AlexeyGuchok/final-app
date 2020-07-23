@@ -1,51 +1,29 @@
-import User from "../models/User";
-const prodKeys = require("../client/src/config/production");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const keys = require("../client/src/config/default");
+// const User = require("../models/User");
 
-passport.deserializeUser((id, done) => {
-  User.findById(id).then((user) => {
-    done(null, user);
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function (id, done) {
+  User.findById(id, function (err, user) {
+    done(err, user);
   });
 });
 
 passport.use(
-  new LocalStrategy(function (username, password, done) {
-    User.findOne({ username: username }, function (err, user) {
-      if (err) {
-        return done(err);
-      }
-      if (!user) {
-        return done(null, false, { message: "Incorrect username." });
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: "Incorrect password." });
-      }
-      return done(null, user);
-    });
-  })
-);
-
-passport.use(
   new GoogleStrategy(
     {
-      clientID: keys.googleClientID,
-      clientSecret: keys.googleClientSecret,
-      callbackURL:
-        (process.env == "development" ? keys.baseUrl : prodKeys.baseUrl) +
-        "/api/auth/google/callback",
-      proxy: true,
+      clientID:
+        "273658734861-v2034eqjghe46uonuc6k5j7lkteldret.apps.googleusercontent.com",
+      clientSecret: "Gau7p5l6k0xl2YIW6Xn91ytj",
+      callbackURL: "http://localhost:9998/google/callback",
     },
-    async (accessToken, refreshToken, profile, done) => {
-      const existingUser = await User.findOne({ googleId: profile.id });
-
-      if (existingUser) {
-        return done(null, existingUser);
-      }
-      console.log(profile);
-      const user = await new User({ googleId: profile.id }).save();
-      done(null, user);
+    function (accessToken, refreshToken, profile, done) {
+      User.findOrCreate({ googleId: profile.id }, function (err, user) {
+        return done(err, user);
+      });
     }
   )
 );

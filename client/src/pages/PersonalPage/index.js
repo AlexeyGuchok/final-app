@@ -6,6 +6,7 @@ import { AuthContext } from "../../context/AuthContext";
 import deleteIcon from "../../images/criss-cross.png";
 import ReactMde from "react-mde";
 import * as Showdown from "showdown";
+import ReactMarkdown from "react-markdown/with-html";
 import "react-mde/lib/styles/css/react-mde-all.css";
 import styles from "./style.module.scss";
 
@@ -176,7 +177,7 @@ export const PersonalPage = () => {
             Promise.resolve(converter.makeHtml(markdown))
           }
         />
-
+        <ReactMarkdown source={value} escapeHtml={false} />
         <a class="waves-effect waves-light btn" onClick={sendPost}>
           <i class="material-icons left">cloud</i>Сохранить
         </a>

@@ -44,7 +44,6 @@ router.get("/search", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  console.log(req.params.id);
   try {
     const [headArticle, contentArticle, comments] = await Promise.all([
       Post.findOne({ where: { id: req.params.id } }),
@@ -59,9 +58,9 @@ router.get("/:id", async (req, res) => {
       res.status(404).json({ error: "Статья не найдена" });
     }
 
-    headArticle.date = headArticle.date
-      ? headArticle.date.toDateString()
-      : "no-date";
+    // headArticle.date = headArticle.date
+    //   ? headArticle.date.toDateString()
+    //   : "no-date";
 
     res.json({
       headArticle,
@@ -124,7 +123,9 @@ router.post("/add", async (req, res) => {
 
 router.put("/like", async (req, res) => {
   try {
-    let article = await Chapter.findOne({ id: req.body.id });
+    let article = await Chapter.findOne({
+      where: { post_id: req.body.id, chapter_number: req.body.chapter_number },
+    });
 
     if (!article) {
       res.status(404).json({ error: "Статья не найдена" });
@@ -144,6 +145,7 @@ router.put("/like", async (req, res) => {
       const result = await Chapter.update(updates, {
         where: {
           id: req.body.id,
+          chapter_number: req.body.chapter_number,
         },
       });
       return res.json({ message: "Вы убрали лайк", article: updates });
@@ -154,7 +156,8 @@ router.put("/like", async (req, res) => {
     };
     const result = await Chapter.update(updates, {
       where: {
-        id: req.body.id,
+        post_id: req.body.id,
+        chapter_number: req.body.chapter_number,
       },
     });
     return res.json({ message: "Вы поставили лайк", article: updates });

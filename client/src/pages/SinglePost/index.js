@@ -4,6 +4,7 @@ import { useHistory, Link } from "react-router-dom";
 import { useMessage } from "../../hooks/message.hook";
 import { AuthContext } from "../../context/AuthContext";
 import userImage from "../../images/user.jpg";
+import ReactMarkdown from "react-markdown/with-html";
 import styles from "./style.module.scss";
 
 const SinglePost = () => {
@@ -33,6 +34,7 @@ const SinglePost = () => {
 
         const data = await response.json();
         setData(data);
+        console.log(data);
       } catch (e) {
         setError(e.message);
         console.log(e);
@@ -65,25 +67,19 @@ const SinglePost = () => {
       console.log(e);
     }
   };
-  const avg = () => {
-    if (
-      !data &&
-      (!data.headArticles.grades || data.headArticles.grades == "")
-    ) {
-      return 0;
+  const avg = (grades) => {
+    const array = JSON.parse(grades);
+    if (array.length == 0) {
+      return "Оцените этот пост первым!";
     }
-
-    const array = JSON.parse(data.headArticle.grades);
 
     const summ = array.reduce((acc, element) => {
       return acc + element;
     });
-
     return Math.round((summ * 10) / array.length) / 10;
   };
 
-  const addLike = async (id) => {
-    console.log("click like", id);
+  const addLike = async (id, chapterId) => {
     setLoading(true);
     try {
       const userData = JSON.parse(localStorage.getItem("userData"));
@@ -91,7 +87,11 @@ const SinglePost = () => {
         "http://localhost:" + config.port + "/api/posts/like",
         {
           method: "PUT",
-          body: JSON.stringify({ id: id, userId: userData.userId }),
+          body: JSON.stringify({
+            id: id,
+            userId: userData.userId,
+            chapter_number: chapterId,
+          }),
           headers: {
             "Content-Type": "application/json",
             authorization: userData
@@ -105,10 +105,12 @@ const SinglePost = () => {
 
       // setLoading(false);
       const likes = await response.json();
+      console.log(likes);
       const newArticles = data.contentArticle.map((element) => {
         return element.id == id ? { ...element, ...likes.article } : element;
       });
       setData({ ...data, contentArticle: newArticles });
+      console.log(data);
       message(likes.message);
     } catch (e) {
       // setLoading(false);
@@ -174,7 +176,7 @@ const SinglePost = () => {
   const moveDownHandler = (id) => {};
 
   return (
-    <section>
+    <section className={styles.single_post}>
       <div className="row">
         <div className="col s3">
           <h5>Меню</h5>
@@ -211,13 +213,19 @@ const SinglePost = () => {
               </div>
               <div>
                 <Link to="#rating" className="s-p__rating">
-                  Рейтинг: {avg()}
+                  Рейтинг:
                 </Link>
+                <span> {avg(data.headArticle.grades)}</span>
               </div>
 
               <div className="black-text">Автор: {data.headArticle.author}</div>
 
-              <blockquote>{data.headArticle.preview}</blockquote>
+              <blockquote>
+                <ReactMarkdown
+                  source={data.headArticle.preview}
+                  escapeHtml={false}
+                />
+              </blockquote>
             </div>
           )}
 
@@ -255,12 +263,12 @@ const SinglePost = () => {
                       </a>
                     </div>
                   </div>
-                  <div
-                    // contentEditable="true"
-                    id={element.id}
-                    className="flow-text"
-                  >
-                    {element.content}
+                  <div className={styles.single_post__chapter}>
+                    <h2>Глава {element.chapter_number}</h2>
+                    {element.image && <img src={element.image} />}
+                    <div id={element.id} className="flow-text">
+                      {element.content}
+                    </div>
                   </div>
                   <div className="row">
                     {auth.userId && (
@@ -272,7 +280,9 @@ const SinglePost = () => {
                             ? "red"
                             : ""
                         } col s1 small material-icons`}
-                        onClick={() => addLike(data.headArticle.id)}
+                        onClick={() =>
+                          addLike(data.headArticle.id, element.chapter_number)
+                        }
                       >
                         thumb_up
                       </i>

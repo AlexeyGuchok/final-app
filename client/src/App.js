@@ -55,7 +55,7 @@ function App() {
               ? search.posts.map((element) => {
                   return (
                     <div>
-                      <div class="section">
+                      <div className="section">
                         <h5>
                           <Link to={`/posts/${element.id}`}>
                             {element.title}
@@ -63,7 +63,7 @@ function App() {
                         </h5>
                         <p>Stuff</p>
                       </div>
-                      <div class="divider"></div>
+                      <div className="divider"></div>
                     </div>
                   );
                 })
