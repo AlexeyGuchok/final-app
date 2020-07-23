@@ -1,0 +1,41 @@
+@import "~materialize-css/dist/css/materialize.min.css";
+
+input.yellow-btn {
+  border-bottom: 1px solid #fff !important;
+  box-shadow: 0 1px 0 0 #fff !important;
+}
+
+input.yellow-btn + label {
+  color: #ffffff !important;
+}
+input.yellow-btn:focus + label {
+  color: #ffeb3b !important;
+}
+input.yellow-btn:focus {
+  border-bottom: 1px solid #ffeb3b !important;
+  box-shadow: 0 1px 0 0 #ffeb3b !important;
+}
+.choose-menu a,
+.nav-content a {
+  cursor: pointer;
+}
+.action-button {
+  margin: 10% auto;
+}
+.action-button img {
+  display: block;
+  margin: auto;
+  width: 30%;
+}
+.margin {
+  margin: 1% auto;
+}
+.s-p__main-image img {
+  height: 40vh;
+  object-fit: cover;
+  width: 100%;
+}
+.card .card-image img {
+  height: 40vh;
+  object-fit: cover;
+}

@@ -1,0 +1,11 @@
+.articles_wrap {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  & article {
+    width: 90%;
+    & img {
+      height: 35vh;
+    }
+  }
+}

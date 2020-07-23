@@ -1,0 +1,45 @@
+{
+  "name": "itra",
+  "version": "1.0.0",
+  "engines": {
+    "node": "12.16.1",
+    "npm": "6.13.4"
+  },
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "npm install && npm run install && npm run build && cross-env NODE_ENV=production node server.js",
+    "server": "nodemon server.js",
+    "client": "npm run start --prefix client",
+    "install": "npm install --prefix client",
+    "build": "npm run build --prefix client",
+    "dev": "cross-env NODE_ENV=development concurrently \"npm run server\" \"npm run client\"",
+    "start-production": "cross-env NODE_ENV=production node server.js"
+  },
+  "author": "Aleksey Guchok",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cli": "^1.0.1",
+    "config": "^3.3.1",
+    "cors": "^2.8.5",
+    "crossenv": "0.0.2-security",
+    "express": "^4.17.1",
+    "express-validator": "^6.5.0",
+    "hbs": "^4.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.1.0",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0",
+    "react-through": "^1.1.4",
+    "sequelize": "^5.21.13",
+    "sequelize-cli": "^5.5.1",
+    "shortid": "^2.2.15"
+  },
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "cross-env": "^7.0.2",
+    "nodemon": "^2.0.4"
+  }
+}
