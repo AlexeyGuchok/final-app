@@ -103,11 +103,12 @@ const SinglePost = () => {
         }
       );
 
-      // setLoading(false);
       const likes = await response.json();
       console.log(likes);
       const newArticles = data.contentArticle.map((element) => {
-        return element.id == id ? { ...element, ...likes.article } : element;
+        return element.id == chapterId
+          ? { ...element, ...likes.article }
+          : element;
       });
       setData({ ...data, contentArticle: newArticles });
       console.log(data);

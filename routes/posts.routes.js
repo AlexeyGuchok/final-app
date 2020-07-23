@@ -132,6 +132,7 @@ router.post("/add", async (req, res) => {
 });
 
 router.put("/like", async (req, res) => {
+  console.log(req.body.id, req.body.chapter_number, "++++++++");
   try {
     let article = await Chapter.findOne({
       where: { post_id: req.body.id, chapter_number: req.body.chapter_number },
@@ -154,7 +155,7 @@ router.put("/like", async (req, res) => {
       };
       const result = await Chapter.update(updates, {
         where: {
-          id: req.body.id,
+          post_id: req.body.id,
           chapter_number: req.body.chapter_number,
         },
       });
