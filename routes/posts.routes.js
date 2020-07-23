@@ -88,25 +88,35 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/add", async (req, res) => {
+  console.log(req.body);
   try {
-    const { title, user_id, text } = req.body;
-
+    const { title, preview, user_id, text, genre } = req.body;
     const responsePost = await Post.create({
       title,
+      genre,
       author: user_id,
-      preview: text.slice(0, 140),
+      preview: preview ? preview : text.slice(0, 140),
       date: new Date(),
       updated: new Date(),
+      // image: image
+      //   ? image
+      //   : "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Keen_Bild_Taxon.svg/1200px-Keen_Bild_Taxon.svg.png",
     });
 
     const responseChapter = await Chapter.create({
       title,
+      chapter_number: 1,
       post_id: responsePost.id,
       author: user_id,
-      preview: text.slice(0, 140),
+      content: text,
       date: new Date(),
       updated: new Date(),
+      // image: image
+      //   ? image
+      //   : "https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/Keen_Bild_Taxon.svg/1200px-Keen_Bild_Taxon.svg.png",
     });
+
+    console.log(responseChapter);
 
     if (responsePost && responseChapter) {
       return res.status(201).json({

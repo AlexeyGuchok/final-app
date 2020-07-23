@@ -1,15 +1,19 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-// const User = require("../models/User");
+const User = require("../models/User");
 
 passport.serializeUser(function (user, done) {
   done(null, user.id);
 });
 
-passport.deserializeUser(function (id, done) {
-  User.findById(id, function (err, user) {
-    done(err, user);
-  });
+passport.deserializeUser(async function (id, done) {
+  const user = await User.findOne({ where: { googleId: id } });
+  console.log(user);
+  if (user) {
+    return done(null, user);
+  }
+
+  return done(new Error());
 });
 
 passport.use(
@@ -20,10 +24,14 @@ passport.use(
       clientSecret: "Gau7p5l6k0xl2YIW6Xn91ytj",
       callbackURL: "http://localhost:9998/google/callback",
     },
-    function (accessToken, refreshToken, profile, done) {
-      User.findOrCreate({ googleId: profile.id }, function (err, user) {
-        return done(err, user);
-      });
+    async function (accessToken, refreshToken, profile, done) {
+      const user = await User.findOne({ where: { googleId: profile.id } });
+      console.log(user);
+      if (user) {
+        return done(null, user);
+      }
+      const newUser = await User.create({ googleId: profile.id });
+      return done(null, newUser);
     }
   )
 );

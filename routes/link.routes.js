@@ -3,6 +3,7 @@ const router = Router();
 const auth = require("../middleware/auth.middleware");
 const User = require("../models/User");
 const Post = require("../models/Post");
+const Chapter = require("../models/Chapter");
 
 router.get("/", async (req, res) => {
   try {
@@ -84,9 +85,37 @@ router.get("/user/:id", async (req, res) => {
         },
       }),
     ]);
+
     res.json({
       userData: userData,
       userPosts: userPosts.length ? userPosts : null,
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ error: "went wrong try again" });
+  }
+});
+
+router.get("/user/edit-post", async (req, res) => {
+  try {
+    const [userPosts, userChapters] = await Promise.all([
+      Post.findAll({
+        where: {
+          author: req.params.id,
+        },
+      }),
+      Chapter.findAll({
+        where: {
+          id: req.params.id,
+        },
+      }),
+    ]);
+
+    console.log(userPosts[0], userChapters[0]);
+
+    res.json({
+      userChapters: userChapters,
+      userPosts: userPosts,
     });
   } catch (e) {
     console.log(e);

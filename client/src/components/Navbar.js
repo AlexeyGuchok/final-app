@@ -22,6 +22,9 @@ export const Navbar = ({ theme, changeTheme }) => {
 
         <ul id="nav-mobile" className="right hide-on-med-and-down">
           <li>
+            <a href="http://localhost:4001/google">Гугл</a>
+          </li>
+          <li>
             <div className="switch">
               <label>
                 <span className="white-text">Светлая</span>

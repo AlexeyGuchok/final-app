@@ -193,7 +193,9 @@ const SinglePost = () => {
                 data.contentArticle.map((element) => {
                   return (
                     <li>
-                      <a href={`#${element.id}`}>Глава: {element.id}</a>
+                      <a href={`#${element.id}`}>
+                        Глава {element.chapter_number}
+                      </a>
                     </li>
                   );
                 })}
@@ -263,11 +265,16 @@ const SinglePost = () => {
                       </a>
                     </div>
                   </div>
-                  <div className={styles.single_post__chapter}>
+                  <div id={element.id} className={styles.single_post__chapter}>
                     <h2>Глава {element.chapter_number}</h2>
                     {element.image && <img src={element.image} />}
-                    <div id={element.id} className="flow-text">
-                      {element.content}
+                    <div className="flow-text">
+                      {
+                        <ReactMarkdown
+                          source={element.content}
+                          escapeHtml={false}
+                        />
+                      }
                     </div>
                   </div>
                   <div className="row">
