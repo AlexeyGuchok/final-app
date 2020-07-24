@@ -83,21 +83,21 @@ export const PersonalPage = () => {
   };
 
   const checkHandler = (index) => {
-    const newData = data.map((element, elementIndex) => {
-      if (elementIndex === index) {
-        return { ...element, checked: !element.checked };
-      }
-      return element;
-    });
-    setData(newData);
+    // const newData = data.map((element, elementIndex) => {
+    //   if (elementIndex === index) {
+    //     return { ...element, checked: !element.checked };
+    //   }
+    //   return element;
+    // });
+    // setData(newData);
   };
 
   const checkAllUsers = () => {
-    setCheckAll(!checkAll);
-    const newData = data.map((element, elementIndex) => {
-      return { ...element, checked: !checkAll };
-    });
-    setData(newData);
+    // setCheckAll(!checkAll);
+    // const newData = data.map((element, elementIndex) => {
+    //   return { ...element, checked: !checkAll };
+    // });
+    // setData(newData);
   };
 
   const deleteAllHandler = () => {
